@@ -2,31 +2,39 @@
  * @openapi
  * components:
  *   schemas:
- *     Product:
+ *     Order:
  *       type: object
- *       description: Representa un producto del sistema
+ *       description: Representa una orden del sistema
  *       required:
  *         - id
- *         - name
- *         - category
- *         - price
+ *         - customerName
+ *         - productName
+ *         - quantity
+ *         - total
+ *         - status
  *       properties:
  *         id:
- *           type: number
- *           example: 1
- *         name:
  *           type: string
- *           example: Leche entera
- *         category:
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
+ *         customerName:
+ *           type: string
+ *           example: Juan Pérez
+ *         productName:
+ *           type: string
+ *           example: Laptop Gamer
+ *         quantity:
+ *           type: number
+ *           example: 2
+ *         total:
+ *           type: number
+ *           example: 250000
+ *         status:
  *           type: string
  *           enum:
- *             - Lacteos
- *             - Carnes
- *             - Frutas
- *             - Verduras
- *           example: Lacteos
- *         price:
- *           type: number
- *           example: 4500
+ *             - Pendiente
+ *             - Enviado
+ *             - Entregado
+ *             - Cancelado
+ *           example: Enviado
  */
 export {};

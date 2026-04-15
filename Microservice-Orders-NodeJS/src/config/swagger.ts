@@ -28,16 +28,12 @@ export const swaggerSpec = swaggerJsdoc({
     },
     servers: [
       {
-        url: 'http://localhost:3001',
-      },
-      {
-        url: "http://localhost:3003",
-        description: "Orders microservice",
+        url: 'http://localhost:3003',
       },
     ],
   },
   apis: [
-    './src/presentation/modules/**/*.routes.ts', // donde están tus comentarios
-    './src/config/swagger.schemas.ts', // donde están los schemas
+    './src/presentation/modules/**/*.routes.ts',
+    './src/config/swagger.schemas.ts',
   ],
 });
