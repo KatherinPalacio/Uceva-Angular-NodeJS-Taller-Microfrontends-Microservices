@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { Product } from '../../interfaces/products.interface';
+import { Product } from '../../interfaces/order.interface';
 import { PRODUCTS_MOCK } from '../../mocks/products.mocks';
 import { ProductsService } from './products.service';
 

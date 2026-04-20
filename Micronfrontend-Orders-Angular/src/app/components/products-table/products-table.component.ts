@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { BadgeAtom, BadgeType } from '@brejcha13320/design-system-bootstrap';
-import { ProductCategory, Product } from '../../interfaces/products.interface';
+import { ProductCategory, Product } from '../../interfaces/order.interface';
 
 /**
  * Componente de tabla de productos.
