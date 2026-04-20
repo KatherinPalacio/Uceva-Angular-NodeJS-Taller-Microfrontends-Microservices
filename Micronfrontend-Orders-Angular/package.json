@@ -1,5 +1,5 @@
 {
-  "name": "microfrontend-products-angular",
+  "name": "microfrontend-orders-angular",
   "version": "0.0.0",
   "scripts": {
     "start": "ng serve",
@@ -43,7 +43,7 @@
     "@angular/build": "20.3.12",
     "@angular/cli": "20.3.12",
     "@angular/compiler-cli": "20.3.14",
-    "@compodoc/compodoc": "^1.1.32",
+    "@compodoc/compodoc": "^1.2.1",
     "@types/jest": "30.0.0",
     "@types/node": "24.10.1",
     "jest": "30.2.0",

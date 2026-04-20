@@ -5,23 +5,33 @@ import { Product } from '../../interfaces/products.interface';
 import { PRODUCTS_MOCK } from '../../mocks/products.mocks';
 import { ProductsService } from './products.service';
 
+/**
+ * Pruebas unitarias para el servicio ProductsService.
+ *
+ * @remarks
+ * Verifica la correcta creación del servicio, el consumo de la API
+ * y el manejo de errores en las peticiones HTTP.
+ */
 describe('ProductsService', () => {
   let service: ProductsService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-       providers: [
+      providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
       ]
     });
+
     service = TestBed.inject(ProductsService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    // Verifica que no queden peticiones HTTP pendientes
+    /**
+     * Verifica que no queden peticiones HTTP pendientes.
+     */
     httpMock.verify();
   });
 
@@ -34,7 +44,7 @@ describe('ProductsService', () => {
   });
 
   describe('getAllProducts', () => {
-  
+
     it('debería realizar una petición GET y retornar una lista de productos', () => {
       const countProducts = 5;
       const mockProducts: Product[] = PRODUCTS_MOCK;
@@ -44,7 +54,7 @@ describe('ProductsService', () => {
         expect(productos.length).toBe(mockProducts.length);
       });
 
-      const req = httpMock.expectOne(`api/products/${countProducts}`);
+      const req = httpMock.expectOne(`http://localhost:3002/api/products/${countProducts}`);
       expect(req.request.method).toBe('GET');
 
       req.flush(mockProducts);
@@ -62,14 +72,14 @@ describe('ProductsService', () => {
         },
       });
 
-      const req = httpMock.expectOne(`api/products/${countProducts}`);
+      const req = httpMock.expectOne(`http://localhost:3002/api/products/${countProducts}`);
 
       req.flush(
         { message: 'Error interno del servidor' },
         { status: 500, statusText: 'Internal Server Error' }
       );
     });
-  
+
   });
 
 });
