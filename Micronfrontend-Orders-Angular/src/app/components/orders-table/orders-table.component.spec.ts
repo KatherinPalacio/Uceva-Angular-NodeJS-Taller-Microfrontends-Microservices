@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
 import { OrdersTableComponent } from './orders-table.component';
 import { ORDERS_MOCK } from '../../mocks/orders.mocks';
 
@@ -16,9 +15,7 @@ describe('OrdersTableComponent', () => {
     fixture = TestBed.createComponent(OrdersTableComponent);
     component = fixture.componentInstance;
 
-    // 👇 importante: setear el input correctamente
     fixture.componentRef.setInput('orders', ORDERS_MOCK);
-
     fixture.detectChanges();
   });
 
@@ -45,7 +42,7 @@ describe('OrdersTableComponent', () => {
     expect(firstRowColumns[1].nativeElement.textContent.trim()).toBe(ORDERS_MOCK[0].customerName);
     expect(firstRowColumns[2].nativeElement.textContent.trim()).toBe(ORDERS_MOCK[0].productName);
     expect(firstRowColumns[3].nativeElement.textContent.trim()).toBe(String(ORDERS_MOCK[0].quantity));
-    expect(firstRowColumns[4].nativeElement.textContent.trim()).toBe(String(ORDERS_MOCK[0].total));
+    expect(firstRowColumns[4].nativeElement.textContent.trim()).toBe('$2,500,000.00');
     expect(firstRowColumns[5].nativeElement.textContent.trim()).toBe(ORDERS_MOCK[0].status);
   });
 });

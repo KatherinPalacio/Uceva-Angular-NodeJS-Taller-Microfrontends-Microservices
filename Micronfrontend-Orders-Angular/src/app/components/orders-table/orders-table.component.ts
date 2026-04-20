@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
-import { Order } from '../../interfaces/order.interface';
+import { Order, OrderStatus } from '../../interfaces/order.interface';
 
 /**
  * Componente encargado de mostrar una tabla con el listado de órdenes.
@@ -23,5 +23,22 @@ export class OrdersTableComponent {
    * Lista de órdenes a mostrar en la tabla.
    */
   orders = input.required<Order[]>();
+
+  /**
+   * Devuelve la clase visual según el estado de la orden.
+   *
+   * @param status Estado actual de la orden.
+   * @returns Clase CSS para el badge.
+   */
+  getStatusClass(status: OrderStatus): string {
+    const statusClassMap: Record<OrderStatus, string> = {
+      Pendiente: 'text-bg-warning',
+      Enviado: 'text-bg-primary',
+      Entregado: 'text-bg-success',
+      Cancelado: 'text-bg-danger',
+    };
+
+    return statusClassMap[status];
+  }
 
 }
