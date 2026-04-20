@@ -1,7 +1,7 @@
 import { CurrencyPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { PRODUCTS_MOCK } from '../../mocks/products.mocks';
+import { PRODUCTS_MOCK } from '../../mocks/orders.mocks';
 import { ProductsTableComponent } from './products-table.component';
 
 describe('ProductsTableComponent', () => {
