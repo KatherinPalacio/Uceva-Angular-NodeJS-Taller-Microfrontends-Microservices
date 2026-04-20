@@ -15,6 +15,7 @@ import { User } from "../interfaces/users.interface";
  * console.log(USERS_MOCK);
  * ```
  */
+
 export const USERS_MOCK: User[] = [
     {
         id: 1,
@@ -32,4 +33,5 @@ export const USERS_MOCK: User[] = [
         email: 'ana.gomez@example.com',
         engineering: 'Industrial',
     }
+
 ];
