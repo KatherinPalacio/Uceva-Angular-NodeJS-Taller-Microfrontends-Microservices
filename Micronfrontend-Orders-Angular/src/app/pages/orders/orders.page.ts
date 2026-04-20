@@ -1,65 +1,32 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { OrdersTableComponent } from '../../components/orders-table/orders-table.component';
-import { Order } from '../../interfaces/order.interface';
-import { OrdersService } from '../../services/orders/orders.service';
-import { State } from '../../interfaces/state.interface';
 import { AlertComponent } from '../../components/alert/alert.component';
+import { Order } from '../../interfaces/order.interface';
+import { State } from '../../interfaces/state.interface';
+import { OrdersService } from '../../services/orders/orders.service';
 
-/**
- * Componente contenedor de órdenes.
- *
- * Se utiliza para gestionar y mostrar un listado de órdenes
- * utilizando el componente `OrdersTableComponent`.
- *
- * @remarks
- * Este componente se encarga de consumir el servicio `OrdersService`
- * para obtener las órdenes y pasarlas al componente de tabla.
- * Forma parte de la capa de presentación de la aplicación.
- *
- */
 @Component({
   selector: 'app-orders',
+  standalone: true,
+  imports: [OrdersTableComponent, AlertComponent],
   templateUrl: './orders.page.html',
-  imports: [OrdersTableComponent, AlertComponent]
 })
-export class OrdersPage {
-  /**
-   * Listado de órdenes obtenidas desde el servicio.
-   * @type {Order[]}
-   */
-  orders: Order[] = [];
-
-  /**
-   * Estado actual del componente.
-   *
-   * @default 'init'
-   */
-  state: State = 'init';
-
-  /**
-   * Servicio para obtener órdenes.
-   * @remarks
-   * Se inyecta utilizando la función `inject()` de Angular.
-   */
+export class OrdersPage implements OnInit {
   private ordersService = inject(OrdersService);
 
-  /**
-   * Inicializa el componente y carga las órdenes.
-   * @remarks
-   * Se suscribe al método `getAllOrders()` del servicio y
-   * asigna los datos recibidos a la propiedad `orders`.
-   */
+  orders: Order[] = [];
+  state: State = 'loading';
+
   ngOnInit(): void {
     this.state = 'loading';
-    this.ordersService.getAllOrders(10).subscribe({
+    this.ordersService.getOrders(10).subscribe({
       next: (orders) => {
         this.orders = orders;
         this.state = 'success';
       },
-      error: (error) => {
-        console.error(error);
+      error: () => {
         this.state = 'error';
-      },
+      }
     });
   }
 }

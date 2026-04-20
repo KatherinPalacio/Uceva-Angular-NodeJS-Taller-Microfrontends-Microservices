@@ -2,58 +2,60 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { OrdersPage } from './orders.page';
 import { OrdersService } from '../../services/orders/orders.service';
+import { ORDERS_MOCK } from '../../mocks/orders.mocks';
 
 describe('OrdersPage', () => {
   let component: OrdersPage;
   let fixture: ComponentFixture<OrdersPage>;
-  let ordersServiceSpy: jasmine.SpyObj<OrdersService>;
+  let ordersServiceMock: {
+    getOrders: jest.Mock;
+  };
 
   beforeEach(async () => {
-    const spy = jasmine.createSpyObj('OrdersService', ['getAllOrders']);
+    ordersServiceMock = {
+      getOrders: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [OrdersPage],
       providers: [
-        { provide: OrdersService, useValue: spy }
-      ]
+        {
+          provide: OrdersService,
+          useValue: ordersServiceMock,
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OrdersPage);
     component = fixture.componentInstance;
-    ordersServiceSpy = TestBed.inject(OrdersService) as jasmine.SpyObj<OrdersService>;
   });
 
   it('should create', () => {
+    ordersServiceMock.getOrders.mockReturnValue(of(ORDERS_MOCK));
+
+    fixture.detectChanges();
+
     expect(component).toBeTruthy();
   });
 
   it('should load orders successfully', () => {
-    const mockOrders = [
-      {
-        id: '1',
-        customerName: 'Juan Pérez',
-        productName: 'Laptop',
-        quantity: 2,
-        total: 250000,
-        status: 'Enviado',
-      },
-    ];
+    ordersServiceMock.getOrders.mockReturnValue(of(ORDERS_MOCK));
 
-    ordersServiceSpy.getAllOrders.and.returnValue(of(mockOrders));
+    fixture.detectChanges();
 
-    component.ngOnInit();
-
-    expect(ordersServiceSpy.getAllOrders).toHaveBeenCalledWith(10);
-    expect(component.orders).toEqual(mockOrders);
+    expect(ordersServiceMock.getOrders).toHaveBeenCalledWith(10);
+    expect(component.orders).toEqual(ORDERS_MOCK);
     expect(component.state).toBe('success');
   });
 
   it('should set error state when service fails', () => {
-    ordersServiceSpy.getAllOrders.and.returnValue(throwError(() => new Error('Error al cargar órdenes')));
+    ordersServiceMock.getOrders.mockReturnValue(
+      throwError(() => new Error('Error loading orders'))
+    );
 
-    component.ngOnInit();
+    fixture.detectChanges();
 
-    expect(ordersServiceSpy.getAllOrders).toHaveBeenCalledWith(10);
+    expect(ordersServiceMock.getOrders).toHaveBeenCalledWith(10);
     expect(component.state).toBe('error');
   });
 });
