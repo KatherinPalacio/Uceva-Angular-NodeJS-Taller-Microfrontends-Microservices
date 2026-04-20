@@ -5,6 +5,13 @@ import { User } from '../../interfaces/users.interface';
 import { USERS_MOCK } from '../../mocks/users.mocks';
 import { UsersService } from './users.service';
 
+/**
+ * Pruebas unitarias para el servicio UsersService.
+ *
+ * @remarks
+ * Verifica la creación del servicio, el consumo de la API
+ * y el manejo de errores en las peticiones HTTP.
+ */
 describe('UsersService', () => {
   let service: UsersService;
   let httpMock: HttpTestingController;
@@ -16,25 +23,22 @@ describe('UsersService', () => {
         provideHttpClientTesting(),
       ]
     });
+
     service = TestBed.inject(UsersService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    // Verifica que no queden peticiones HTTP pendientes
     httpMock.verify();
   });
 
   describe('Creación del servicio', () => {
-
     it('debería crearse correctamente', () => {
       expect(service).toBeTruthy();
     });
-
   });
 
   describe('getAllUsers', () => {
-
     it('debería realizar una petición GET y retornar una lista de usuarios', () => {
       const countUsers = 5;
       const mockUsers: User[] = USERS_MOCK;
@@ -44,7 +48,7 @@ describe('UsersService', () => {
         expect(usuarios.length).toBe(mockUsers.length);
       });
 
-      const req = httpMock.expectOne(`api/users/${countUsers}`);
+      const req = httpMock.expectOne(`http://localhost:3001/api/users/${countUsers}`);
       expect(req.request.method).toBe('GET');
 
       req.flush(mockUsers);
@@ -62,14 +66,12 @@ describe('UsersService', () => {
         },
       });
 
-      const req = httpMock.expectOne(`api/users/${countUsers}`);
+      const req = httpMock.expectOne(`http://localhost:3001/api/users/${countUsers}`);
 
       req.flush(
         { message: 'Error interno del servidor' },
         { status: 500, statusText: 'Internal Server Error' }
       );
     });
-
   });
-
 });
