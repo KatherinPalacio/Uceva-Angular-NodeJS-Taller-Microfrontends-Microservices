@@ -1,0 +1,77 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { User } from '../../interfaces/customer.interface';
+import { USERS_MOCK } from '../../mocks/customers.mocks';
+import { UsersService } from './customers.service';
+
+/**
+ * Pruebas unitarias para el servicio UsersService.
+ *
+ * @remarks
+ * Verifica la creación del servicio, el consumo de la API
+ * y el manejo de errores en las peticiones HTTP.
+ */
+describe('UsersService', () => {
+  let service: UsersService;
+  let httpMock: HttpTestingController;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ]
+    });
+
+    service = TestBed.inject(UsersService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  describe('Creación del servicio', () => {
+    it('debería crearse correctamente', () => {
+      expect(service).toBeTruthy();
+    });
+  });
+
+  describe('getAllUsers', () => {
+    it('debería realizar una petición GET y retornar una lista de usuarios', () => {
+      const countUsers = 5;
+      const mockUsers: User[] = USERS_MOCK;
+
+      service.getAllUsers(countUsers).subscribe((usuarios) => {
+        expect(usuarios).toEqual(mockUsers);
+        expect(usuarios.length).toBe(mockUsers.length);
+      });
+
+      const req = httpMock.expectOne(`http://localhost:3001/api/users/${countUsers}`);
+      expect(req.request.method).toBe('GET');
+
+      req.flush(mockUsers);
+    });
+
+    it('debería propagar un error si la petición HTTP falla', () => {
+      const countUsers = 3;
+
+      service.getAllUsers(countUsers).subscribe({
+        next: () => {
+          fail('No debería emitir datos cuando ocurre un error');
+        },
+        error: (error) => {
+          expect(error.status).toBe(500);
+        },
+      });
+
+      const req = httpMock.expectOne(`http://localhost:3001/api/users/${countUsers}`);
+
+      req.flush(
+        { message: 'Error interno del servidor' },
+        { status: 500, statusText: 'Internal Server Error' }
+      );
+    });
+  });
+});
