@@ -61,6 +61,16 @@ export const routes: Routes = [
     }).then((m) => m.OrdersPage),
 },
 
+{
+    path: 'customers',
+    loadComponent: () =>
+      loadRemoteModule({
+        type: 'module',
+        remoteEntry: 'http://localhost:4204/remoteEntry.js',
+        exposedModule: './CustomersPage',
+      }).then((m) => m.CustomersPage),
+  },
+
   /**
    * Ruta comodín.
    *
@@ -69,4 +79,6 @@ export const routes: Routes = [
    * automáticamente a la ruta de usuarios.
    */
   { path: '**', redirectTo: 'users' },
+
+  
 ];
