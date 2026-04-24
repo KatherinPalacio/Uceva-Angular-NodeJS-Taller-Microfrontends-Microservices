@@ -65,4 +65,5 @@ export class CustomersTableComponent {
 
     return statusClassMap[status];
   }
+  
 }
