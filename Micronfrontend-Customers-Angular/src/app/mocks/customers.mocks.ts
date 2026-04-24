@@ -1,5 +1,20 @@
 import { Customer } from '../interfaces/customer.interface';
 
+/**
+ * Datos simulados de clientes.
+ *
+ * @remarks
+ * Este mock se utiliza para pruebas unitarias y desarrollo local,
+ * simulando la respuesta del servicio de clientes.
+ *
+ * Permite validar componentes y servicios sin depender
+ * directamente de la API real del microservicio de customers.
+ *
+ * @example
+ * ```ts
+ * console.log(CUSTOMERS_MOCK);
+ * ```
+ */
 export const CUSTOMERS_MOCK: Customer[] = [
   {
     id: 1,

@@ -1,30 +1,23 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { User } from '../../interfaces/customer.interface';
-import { USERS_MOCK } from '../../mocks/customers.mocks';
-import { UsersService } from './customers.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { CustomersService } from './customers.service';
+import { CUSTOMERS_MOCK } from '../../mocks/customers.mocks';
 
-/**
- * Pruebas unitarias para el servicio UsersService.
- *
- * @remarks
- * Verifica la creación del servicio, el consumo de la API
- * y el manejo de errores en las peticiones HTTP.
- */
-describe('UsersService', () => {
-  let service: UsersService;
+describe('CustomersService', () => {
+  let service: CustomersService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
+        CustomersService,
         provideHttpClient(),
         provideHttpClientTesting(),
-      ]
+      ],
     });
 
-    service = TestBed.inject(UsersService);
+    service = TestBed.inject(CustomersService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -38,40 +31,34 @@ describe('UsersService', () => {
     });
   });
 
-  describe('getAllUsers', () => {
-    it('debería realizar una petición GET y retornar una lista de usuarios', () => {
-      const countUsers = 5;
-      const mockUsers: User[] = USERS_MOCK;
+  describe('getCustomers', () => {
+    it('debería realizar una petición GET y retornar una lista de clientes', () => {
+      const countCustomers = 2;
 
-      service.getAllUsers(countUsers).subscribe((usuarios) => {
-        expect(usuarios).toEqual(mockUsers);
-        expect(usuarios.length).toBe(mockUsers.length);
+      service.getCustomers(countCustomers).subscribe((customers) => {
+        expect(customers).toEqual(CUSTOMERS_MOCK);
       });
 
-      const req = httpMock.expectOne(`http://localhost:3001/api/users/${countUsers}`);
+      const req = httpMock.expectOne(`http://localhost:3004/api/customers/${countCustomers}`);
       expect(req.request.method).toBe('GET');
 
-      req.flush(mockUsers);
+      req.flush(CUSTOMERS_MOCK);
     });
 
     it('debería propagar un error si la petición HTTP falla', () => {
-      const countUsers = 3;
+      const countCustomers = 2;
 
-      service.getAllUsers(countUsers).subscribe({
-        next: () => {
-          fail('No debería emitir datos cuando ocurre un error');
-        },
+      service.getCustomers(countCustomers).subscribe({
+        next: () => fail('Se esperaba un error'),
         error: (error) => {
           expect(error.status).toBe(500);
         },
       });
 
-      const req = httpMock.expectOne(`http://localhost:3001/api/users/${countUsers}`);
+      const req = httpMock.expectOne(`http://localhost:3004/api/customers/${countCustomers}`);
+      expect(req.request.method).toBe('GET');
 
-      req.flush(
-        { message: 'Error interno del servidor' },
-        { status: 500, statusText: 'Internal Server Error' }
-      );
+      req.flush('Error del servidor', { status: 500, statusText: 'Server Error' });
     });
   });
 });

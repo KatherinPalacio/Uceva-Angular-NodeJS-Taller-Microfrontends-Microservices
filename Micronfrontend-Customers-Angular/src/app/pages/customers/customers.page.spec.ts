@@ -4,19 +4,20 @@ import { CustomersPage } from './customers.page';
 import { CustomersService } from '../../services/customers/customers.service';
 import { CUSTOMERS_MOCK } from '../../mocks/customers.mocks';
 
-
 describe('CustomersPage', () => {
   let component: CustomersPage;
   let fixture: ComponentFixture<CustomersPage>;
-  let customersServiceSpy: any;
+  let customersServiceMock: { getCustomers: jest.Mock };
 
   beforeEach(async () => {
-    customersServiceSpy = jasmine.createSpyObj('CustomersService', ['getCustomers']);
+    customersServiceMock = {
+      getCustomers: jest.fn(),
+    };
 
     await TestBed.configureTestingModule({
       imports: [CustomersPage],
       providers: [
-        { provide: CustomersService, useValue: customersServiceSpy }
+        { provide: CustomersService, useValue: customersServiceMock }
       ]
     }).compileComponents();
 
@@ -25,36 +26,36 @@ describe('CustomersPage', () => {
   });
 
   it('should create', () => {
-    customersServiceSpy.getCustomers.and.returnValue(of(CUSTOMERS_MOCK));
+    customersServiceMock.getCustomers.mockReturnValue(of(CUSTOMERS_MOCK));
 
     fixture.detectChanges();
 
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with loading state and empty customers list', () => {
-    expect(component.state).toBe('loading');
+  it('should initialize with init state and empty customers list', () => {
+    expect(component.state).toBe('init');
     expect(component.customers).toEqual([]);
   });
 
   it('should load customers successfully on ngOnInit', () => {
-    customersServiceSpy.getCustomers.and.returnValue(of(CUSTOMERS_MOCK));
+    customersServiceMock.getCustomers.mockReturnValue(of(CUSTOMERS_MOCK));
 
     fixture.detectChanges();
 
-    expect(customersServiceSpy.getCustomers).toHaveBeenCalledWith(10);
+    expect(customersServiceMock.getCustomers).toHaveBeenCalledWith(10);
     expect(component.customers).toEqual(CUSTOMERS_MOCK);
     expect(component.state).toBe('success');
   });
 
   it('should set error state when getCustomers fails', () => {
-    customersServiceSpy.getCustomers.and.returnValue(
+    customersServiceMock.getCustomers.mockReturnValue(
       throwError(() => new Error('Error al cargar clientes'))
     );
 
     fixture.detectChanges();
 
-    expect(customersServiceSpy.getCustomers).toHaveBeenCalledWith(10);
+    expect(customersServiceMock.getCustomers).toHaveBeenCalledWith(10);
     expect(component.state).toBe('error');
     expect(component.customers).toEqual([]);
   });
